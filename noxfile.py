@@ -61,7 +61,7 @@ def lint(session: nox.Session) -> None:
     install_with_uv(session, extras=["dev"])
 
     # Run ruff checks
-    session.run("uv", "run", "ruff", "check", ".")
+    session.run("uv", "run", "ruff", "check", ".","--fix")
     session.run("uv", "run", "ruff", "format", "--check", ".")
 
 
@@ -203,4 +203,18 @@ def baseline(session: nox.Session) -> None:
     session.run("uv", "run", "ruff", "format", ".")
 
 
+@nox.session(reuse_venv=True)
+def inspect(session: nox.Session) -> None:
+    """Run MCP Inspector for debugging and testing.
 
+    This command starts the MCP Inspector interface for interactive debugging
+    and testing of the MCP server implementation.
+
+    Args:
+        session: Nox session object for running commands
+    """
+    # Install dependencies
+    install_with_uv(session)
+
+    # Run MCP Inspector
+    session.run("npx", "@modelcontextprotocol/inspector", "uv", "run", "./mcp_programming/core.py")
